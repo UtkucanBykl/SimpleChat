@@ -36,8 +36,12 @@ class Chat extends Component {
     render() {
         return (
             <div className="App">
+                <div>
+                    <h1>{chatStore.timer}</h1>
                 {chatStore.all_message &&
-                chatStore.all_message.map((msg) => <Card msg={msg.msg} username={msg.username}/>)}
+                chatStore.all_message.map((msg) =>
+                    <Card position={msg.username === userStore.user.email ? 'right' : 'left' } msg={msg.msg} username={msg.username}/>)}
+                </div>
                 <input type="text" placeholder="Mesaj" onChange={(evt) => this.setState({msg: evt.target.value})} />
                 <button onClick={() => chatStore.sendMessage(this.state.msg)}>Gönder</button>
                 <button onClick={() => this.logout()}>Çıkış</button>

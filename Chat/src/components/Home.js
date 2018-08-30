@@ -22,13 +22,20 @@ class Home extends Component {
     }
 
     login(){
-        userStore.login(this.state.email, this.state.password);
-        localStorage.setItem('user', JSON.stringify(userStore.user))
+        userStore.login(this.state.email, this.state.password).then(
+            (user) => localStorage.setItem('user', JSON.stringify(user))
+        ).catch(
+            (err) => console.log(err)
+        )
+
     }
 
     signup(){
-        userStore.signUp(this.state.new_email, this.state.new_password);
-        console.log(userStore.user)
+        userStore.signUp(this.state.new_email, this.state.new_password).then(
+            (user) => localStorage.setItem('user', JSON.stringify(user))
+        ).catch(
+            (err) => console.log(err)
+        )
     }
 
 

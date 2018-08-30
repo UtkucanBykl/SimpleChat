@@ -8,21 +8,36 @@ class ChatStore{
 
     @observable messages = [];
     @observable all_message = [];
+    @observable timer = 10;
     @action listener(){
 
     }
 
-    sendMessage(msg,){
+    deleteMessage(key){
+        this.interval = setTimeout(() => {
+            fire.database().ref("chat").child(key).remove();
+        },10000)
+    }
+
+    sendMessage(msg){
         let key = fire.database().ref('chat/').push().key;
         console.log(key);
         fire.database().ref('chat/').child(key).set({
             msg:msg,
             username:userStore.user.email
-        })
+        });
+        this.deleteMessage(key);
+        this.rTimer();
     };
 
-    @computed get allMessage(){
-        return;
+    @action rTimer(){
+        this.timerinterval = setInterval(() => {
+            this.timer -= 1;
+            if(this.timer < 1){
+                clearInterval(this.timerinterval);
+            }
+        }, 1000);
+
     }
 
 
