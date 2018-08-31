@@ -4,6 +4,9 @@ import userStore from '../stores/UserStore'
 import chatStore from '../stores/ChatStore'
 import fire from '../config/fire';
 import Card from './Card';
+import User from './User';
+import 'bootstrap/dist/css/bootstrap.min.css';
+
 
 @observer
 class Chat extends Component {
@@ -16,15 +19,14 @@ class Chat extends Component {
 
     componentDidMount(){
     userStore.user = JSON.parse(localStorage.getItem('user'))
-    fire.database().ref("chat/").on('value', snap => {
-        chatStore.all_message = [];
-        console.log(snap.val());
-        snap.forEach(function (child) {
-            console.log(child.val())
-            chatStore.all_message.push(child.val())
-        })
+        fire.database().ref("users/").on('value', snap => {
+            console.log(snap.val());
+            snap.forEach(function (child) {
+                console.log("denem",child.val())
+                chatStore.all_users.push(child.val())
+            })
 
-    })
+        })
     }
 
     logout(){
@@ -35,17 +37,25 @@ class Chat extends Component {
 
     render() {
         return (
-            <div className="App">
-                <div>
-                    <h1>{chatStore.timer}</h1>
+            <div className="container col-md-12">
+            <div className="row">
+                <div className="col-md-6">
+                    <h1>Chat Users</h1>
+                    {chatStore.all_users &&
+                    chatStore.all_users.map((user) => <User uid={user.uid} username={user.email} />)}
+                </div>
+                <div className="col-md-6 clearfix">
                 {chatStore.all_message &&
                 chatStore.all_message.map((msg) =>
                     <Card position={msg.username === userStore.user.email ? 'right' : 'left' } msg={msg.msg} username={msg.username}/>)}
-                </div>
-                <input type="text" placeholder="Mesaj" onChange={(evt) => this.setState({msg: evt.target.value})} />
-                <button onClick={() => chatStore.sendMessage(this.state.msg)}>Gönder</button>
-                <button onClick={() => this.logout()}>Çıkış</button>
 
+                    <div className="">
+                        <input type="text" placeholder="Mesaj" onChange={(evt) => this.setState({msg: evt.target.value})} />
+                        <button onClick={() => chatStore.sendMessage(this.state.msg)} className="btn btn-danger">Gönder</button>
+                        <button onClick={() => this.logout()}>Çıkış</button>
+                    </div>
+                    </div>
+            </div>
             </div>
         );
     }

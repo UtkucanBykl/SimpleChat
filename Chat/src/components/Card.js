@@ -1,26 +1,27 @@
 import React, { Component } from 'react';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 
 export default class Card extends Component{
 
     leftMessage(){
         return(
-            <div style={style.leftStyle}>
-                <h4>
-                    {this.props.msg}
-                </h4>
-                <span>{this.props.username}</span>
+            <div className="card text-white bg-info  float-right" style={style.leftStyle}>
+                <div className="card-header">{this.props.username}</div>
+                <div className="card-body">
+                    <p className="card-text">{this.props.msg}</p>
+                    </div>
             </div>
         )
     }
 
     rightMessage(){
         return(
-            <div style={style.rightStyle}>
-                <h4>
-                    {this.props.msg}
-                </h4>
-                <span>{this.props.username}</span>
+            <div className="card text-white bg-success float-left" style={style.leftStyle}>
+                <div className="card-header">{this.props.username}</div>
+                <div className="card-body">
+                    <p className="card-text">{this.props.msg}</p>
+                </div>
             </div>
         )
     }
@@ -28,9 +29,11 @@ export default class Card extends Component{
     render(){
 
         return(
-            <div>
+            <div className="col-md-6">
             {this.props.position === "right" ? this.rightMessage(): this.leftMessage()}
             </div>
+
+
         )
 
     }
@@ -39,14 +42,9 @@ export default class Card extends Component{
 
 const style = {
     leftStyle:{
-        borderBottomRightRadius: 25,
-        backgroundColor: '#ef4567',
         width: 250,
     },
     rightStyle:{
-        marginLeft: 250,
-        borderBottomRightRadius: 25,
-        backgroundColor: '#ef4567',
         width: 250
     }
 

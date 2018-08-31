@@ -6,39 +6,37 @@ import userStore from "./UserStore";
 
 class ChatStore{
 
-    @observable messages = [];
     @observable all_message = [];
-    @observable timer = 10;
+    @observable all_users = [];
+    @observable uid = "";
     @action listener(){
 
     }
 
-    deleteMessage(key){
-        this.interval = setTimeout(() => {
-            fire.database().ref("chat").child(key).remove();
-        },10000)
-    }
+
 
     sendMessage(msg){
         let key = fire.database().ref('chat/').push().key;
         console.log(key);
-        fire.database().ref('chat/').child(key).set({
+        fire.database().ref('chat/').child(this.uid).child(key).set({
             msg:msg,
             username:userStore.user.email
         });
-        this.deleteMessage(key);
-        this.rTimer();
     };
 
-    @action rTimer(){
-        this.timerinterval = setInterval(() => {
-            this.timer -= 1;
-            if(this.timer < 1){
-                clearInterval(this.timerinterval);
-            }
-        }, 1000);
+    @action getAll(){
+        return fire.database().ref("chat/").child(this.uid).on('value', snap => {
+            chatStore.all_message = [];
+            console.log(snap.val());
+            snap.forEach(function (child) {
+                console.log("ne",child.val())
+                chatStore.all_message.push(child.val())
+            })
+
+        })
 
     }
+
 
 
 }

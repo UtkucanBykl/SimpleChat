@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { observer } from 'mobx-react'
 import userStore from '../stores/UserStore'
+import fire from '../config/fire'
 
 @observer
 class Home extends Component {
@@ -17,7 +18,6 @@ class Home extends Component {
     }
 
     componentWillMount(){
-        console.log('utku',JSON.parse(localStorage.getItem('user')));
         userStore.user = JSON.parse(localStorage.getItem('user'));
     }
 
@@ -32,7 +32,14 @@ class Home extends Component {
 
     signup(){
         userStore.signUp(this.state.new_email, this.state.new_password).then(
-            (user) => localStorage.setItem('user', JSON.stringify(user))
+            (user) => {
+                localStorage.setItem('user', JSON.stringify(user))
+                let key = fire.database().ref("chat/").push().key;
+                fire.database().ref("users").child(key).set({
+                    email:user.email,
+                    uid: user.uid
+                })
+            }
         ).catch(
             (err) => console.log(err)
         )
